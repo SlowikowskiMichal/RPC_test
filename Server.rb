@@ -1,72 +1,59 @@
+#!/usr/bin/env ruby
+require 'bunny'
 
-require 'thrift'
-
-require 'calculator'
-require 'shared_types'
-
-class CalculatorHandler
-  def initialize()
-    @log = {}
+class FibonacciServer
+  def initialize
+    @connection = Bunny.new
+    @connection.start
+    @channel = @connection.create_channel
   end
 
-  def ping()
-    puts "ping()"
+  def start(queue_name)
+    @queue = channel.queue(queue_name)
+    @exchange = channel.default_exchange
+    subscribe_to_queue
   end
 
-  def add(n1, n2)
-    print "add(", n1, ",", n2, ")\n"
-    return n1 + n2
+  def stop
+    channel.close
+    connection.close
   end
 
-  def calculate(logid, work)
-    print "calculate(", logid, ", {", work.op, ",", work.num1, ",", work.num2,"})\n"
-    if work.op == Operation::ADD
-      val = work.num1 + work.num2
-    elsif work.op == Operation::SUBTRACT
-      val = work.num1 - work.num2
-    elsif work.op == Operation::MULTIPLY
-      val = work.num1 * work.num2
-    elsif work.op == Operation::DIVIDE
-      if work.num2 == 0
-        x = InvalidOperation.new()
-        x.whatOp = work.op
-        x.why = "Cannot divide by 0"
-        raise x
-      end
-      val = work.num1 / work.num2
-    else
-      x = InvalidOperation.new()
-      x.whatOp = work.op
-      x.why = "Invalid operation"
-      raise x
+  def loop_forever
+    # This loop only exists to keep the main thread
+    # alive. Many real world apps won't need this.
+    loop { sleep 5 }
+  end
+
+  private
+
+  attr_reader :channel, :exchange, :queue, :connection
+
+  def subscribe_to_queue
+    queue.subscribe do |_delivery_info, properties, payload|
+      result = fibonacci(payload.to_i)
+
+      exchange.publish(
+          result.to_s,
+          routing_key: properties.reply_to,
+          correlation_id: properties.correlation_id
+      )
     end
-
-    entry = SharedStruct.new()
-    entry.key = logid
-    entry.value = "#{val}"
-    @log[logid] = entry
-
-    return val
-
   end
 
-  def getStruct(key)
-    print "getStruct(", key, ")\n"
-    return @log[key]
-  end
+  def fibonacci(value)
+    return value if value.zero? || value == 1
 
-  def zip()
-    print "zip\n"
+    fibonacci(value - 1) + fibonacci(value - 2)
   end
-
 end
 
-handler = CalculatorHandler.new()
-processor = Calculator::Processor.new(handler)
-transport = Thrift::ServerSocket.new(9090)
-transportFactory = Thrift::BufferedTransportFactory.new()
-server = Thrift::SimpleServer.new(processor, transport, transportFactory)
+begin
+  server = FibonacciServer.new
 
-puts "Starting the server..."
-server.serve()
-puts "done."
+  puts ' [x] Awaiting RPC requests'
+  server.start('rpc_queue')
+  server.loop_forever
+rescue Interrupt => _
+  server.stop
+end

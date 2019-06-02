@@ -1,35 +1,70 @@
 #!/usr/bin/env ruby
+require 'bunny'
+require 'thread'
 
-# Copyright 2015 gRPC authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+class FibonacciClient
+  attr_accessor :call_id, :response, :lock, :condition, :connection,
+                :channel, :server_queue_name, :reply_queue, :exchange
 
-# Sample app that connects to a Greeter service.
-#
-# Usage: $ path/to/greeter_client.rb
+  def initialize(server_queue_name)
+    @connection = Bunny.new(automatically_recover: false)
+    @connection.start
 
-this_dir = File.expand_path(File.dirname(__FILE__))
-lib_dir = File.join(this_dir, 'lib')
-$LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
+    @channel = connection.create_channel
+    @exchange = channel.default_exchange
+    @server_queue_name = server_queue_name
 
-require 'grpc'
-require 'helloworld_services_pb'
+    setup_reply_queue
+  end
 
-def main
-  stub = Helloworld::Greeter::Stub.new('localhost:50051', :this_channel_is_insecure)
-  user = ARGV.size > 0 ?  ARGV[0] : 'world'
-  message = stub.say_hello(Helloworld::HelloRequest.new(name: user)).message
-  p "Greeting: #{message}"
+  def call(n)
+    @call_id = generate_uuid
+
+    exchange.publish(n.to_s,
+                     routing_key: server_queue_name,
+                     correlation_id: call_id,
+                     reply_to: reply_queue.name)
+
+    # wait for the signal to continue the execution
+    lock.synchronize { condition.wait(lock) }
+
+    response
+  end
+
+  def stop
+    channel.close
+    connection.close
+  end
+
+  private
+
+  def setup_reply_queue
+    @lock = Mutex.new
+    @condition = ConditionVariable.new
+    that = self
+    @reply_queue = channel.queue('', exclusive: true)
+
+    reply_queue.subscribe do |_delivery_info, properties, payload|
+      if properties[:correlation_id] == that.call_id
+        that.response = payload.to_i
+
+        # sends the signal to continue the execution of #call
+        that.lock.synchronize { that.condition.signal }
+      end
+    end
+  end
+
+  def generate_uuid
+    # very naive but good enough for code examples
+    "#{rand}#{rand}#{rand}"
+  end
 end
 
-main
+client = FibonacciClient.new('rpc_queue')
+
+puts ' [x] Requesting fib(30)'
+response = client.call(30)
+
+puts " [.] Got #{response}"
+
+client.stop
