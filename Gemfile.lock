@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    thrift (0.11.0.0)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  thrift
+
+BUNDLED WITH
+   1.17.2
