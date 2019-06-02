@@ -36,9 +36,16 @@ if __FILE__ == $0
     fileName = ARGV
   end
   if fileName.respond_to?('each')
+    threads = []
+    mutex = Mutex.new
     fileName.each do |file|
-      result.append "Result: #{file}\n#{openFile(file)}"
+      threads << Thread.new{
+        temp = "Result: #{file}\n#{openFile(file)}"
+        mutex.synchronize {result.append temp}
+      }
     end
+    threads.each{|t| t.join}
+
   else
     result = "Result: #{fileName}\n#{openFile(fileName)}"
   end

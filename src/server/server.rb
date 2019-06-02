@@ -33,7 +33,7 @@ class FibonacciServer
   def subscribe_to_queue
     queue.subscribe do |_delivery_info, properties, payload|
       stdout_str, error_str, status = ccrf(payload)
-      result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}"
+      result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}\n\n"
       exchange.publish(
           result,
           routing_key: properties.reply_to,
