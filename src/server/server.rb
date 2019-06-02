@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'bunny'
-require './src/server/execfunction.rb'
+require './execfunction.rb'
 
-class FibonacciServer
+class RPCServer
   def initialize
     @connection = Bunny.new
     @connection.start
@@ -50,7 +50,7 @@ class FibonacciServer
 end
 
 begin
-  server = FibonacciServer.new
+  server = RPCServer.new
 
   puts ' [x] Awaiting RPC requests'
   server.start('rpc_queue')

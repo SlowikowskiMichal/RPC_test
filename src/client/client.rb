@@ -5,7 +5,7 @@ end
 require 'timeout'
 require 'securerandom'
 require 'fileutils'
-require './src/client/rpcClient.rb'
+require './rpcClient.rb'
 require 'open3'
 include Open3
 
