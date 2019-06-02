@@ -2,7 +2,7 @@
 require 'bunny'
 require './src/server/execfunction.rb'
 
-class FibonacciServer
+class RPCServer
   def initialize
     @connection = Bunny.new
     @connection.start
@@ -21,8 +21,6 @@ class FibonacciServer
   end
 
   def loop_forever
-    # This loop only exists to keep the main thread
-    # alive. Many real world apps won't need this.
     loop { sleep 5 }
   end
 
@@ -41,16 +39,10 @@ class FibonacciServer
       )
     end
   end
-
-  def fibonacci(value)
-    return value if value.zero? || value == 1
-
-    fibonacci(value - 1) + fibonacci(value - 2)
-  end
 end
 
 begin
-  server = FibonacciServer.new
+  server = RPCServer.new
 
   puts ' [x] Awaiting RPC requests'
   server.start('rpc_queue')
