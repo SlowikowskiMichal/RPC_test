@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'bunny'
 require 'thread'
+require 'securerandom'
 
 class RPCClient
   attr_accessor :call_id, :response, :lock, :condition, :connection,
@@ -18,9 +19,8 @@ class RPCClient
   end
 
   def call(n)
-    puts "Requesting:\n#{n}"
-    @call_id = generate_uuid
-
+    puts n
+    @call_id = SecureRandom.uuid
     exchange.publish(n.to_s,
                      routing_key: server_queue_name,
                      correlation_id: call_id,
@@ -53,10 +53,5 @@ class RPCClient
         that.lock.synchronize { that.condition.signal }
       end
     end
-  end
-
-  def generate_uuid
-    # very naive but good enough for code examples
-    "#{rand}#{rand}#{rand}"
   end
 end
