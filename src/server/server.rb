@@ -21,8 +21,6 @@ class RPCServer
   end
 
   def loop_forever
-    # This loop only exists to keep the main thread
-    # alive. Many real world apps won't need this.
     loop { sleep 5 }
   end
 
@@ -40,12 +38,6 @@ class RPCServer
           correlation_id: properties.correlation_id
       )
     end
-  end
-
-  def fibonacci(value)
-    return value if value.zero? || value == 1
-
-    fibonacci(value - 1) + fibonacci(value - 2)
   end
 end
 
