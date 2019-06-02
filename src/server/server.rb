@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'bunny'
+require './src/server/execfunction.rb'
 
 class FibonacciServer
   def initialize
@@ -31,10 +32,10 @@ class FibonacciServer
 
   def subscribe_to_queue
     queue.subscribe do |_delivery_info, properties, payload|
-      result = fibonacci(payload.to_i)
-
+      stdout_str, error_str, status = ccrf(payload)
+      result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}"
       exchange.publish(
-          result.to_s,
+          result,
           routing_key: properties.reply_to,
           correlation_id: properties.correlation_id
       )

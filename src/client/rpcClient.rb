@@ -2,7 +2,7 @@
 require 'bunny'
 require 'thread'
 
-class FibonacciClient
+class RPCClient
   attr_accessor :call_id, :response, :lock, :condition, :connection,
                 :channel, :server_queue_name, :reply_queue, :exchange
 
@@ -18,6 +18,7 @@ class FibonacciClient
   end
 
   def call(n)
+    puts "Requesting:\n#{n}"
     @call_id = generate_uuid
 
     exchange.publish(n.to_s,
@@ -46,7 +47,7 @@ class FibonacciClient
 
     reply_queue.subscribe do |_delivery_info, properties, payload|
       if properties[:correlation_id] == that.call_id
-        that.response = payload.to_i
+        that.response = payload
 
         # sends the signal to continue the execution of #call
         that.lock.synchronize { that.condition.signal }
@@ -59,12 +60,3 @@ class FibonacciClient
     "#{rand}#{rand}#{rand}"
   end
 end
-
-client = FibonacciClient.new('rpc_queue')
-
-puts ' [x] Requesting fib(30)'
-response = client.call(30)
-
-puts " [.] Got #{response}"
-
-client.stop
