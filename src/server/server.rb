@@ -39,7 +39,7 @@ class RPCServer
     queue.subscribe do |_delivery_info, properties, payload|
 
       executor = ProgramExecutor.new
-      stdout_str, error_str, status = executor.execute(payload,@configuration.ruby_path,@configuration.result_folder_path)
+      stdout_str, error_str, status, file_path = executor.execute(payload,@configuration.ruby_path,@configuration.result_folder_path)
       result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}\n\n"
       exchange.publish(
           result,

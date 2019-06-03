@@ -26,10 +26,10 @@ class ProgramExecutor
 
     if flag
       @stdout_str, @error_str, @status = run_software(ruby_path,path)
-      return @stdout_str, @error_str, @status
+      return @stdout_str, @error_str, @status, path
     end
 
-    return "Can't compile file", err, ""
+    return "Can't compile file", err, "", path
   end
 
   def is_file_compilable(file_content)
