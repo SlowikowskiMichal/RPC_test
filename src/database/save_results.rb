@@ -7,7 +7,7 @@ begin
 	elsif ARGV.length != 4
 		puts "Script requires a file path and 3 result inputs" 
 	else		
-		db = SQLite3::Database.open "test.db"
+		db = SQLite3::Database.open "./resources/database_folder/test.db"
 		db.execute("PRAGMA Foreign_keys = ON")
 		db.execute "CREATE TABLE IF NOT EXISTS File_Result
 		(	Id INTEGER PRIMARY KEY,
