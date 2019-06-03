@@ -1,5 +1,5 @@
 require 'test/unit'
-require './src/server/serverConfig.rb'
+require './src/server/server_config.rb'
 class MyTest < Test::Unit::TestCase
   def setup
     @path_to_json = "./resources/serverConfig.json"

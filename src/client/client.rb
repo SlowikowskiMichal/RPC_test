@@ -2,9 +2,9 @@ if RUBY_VERSION.to_f < 2.0
   $stderr.puts "Ruby version 2.0 or higher required!"
   exit 1
 end
-require './src/client/rpcClient.rb'
-require './src/client/filemanager.rb'
-require './src/client/clientConfig.rb'
+require './src/client/rpc_client.rb'
+require './src/client/file_manager.rb'
+require './src/client/client_config.rb'
 
 class ClientApp
   @result

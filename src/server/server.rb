@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'bunny'
-require './src/server/programExecutor.rb'
-require './src/server/serverConfig.rb'
+require './src/server/program_executor.rb'
+require './src/server/server_config.rb'
 
 
 class RPCServer

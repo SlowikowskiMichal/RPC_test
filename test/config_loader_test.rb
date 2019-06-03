@@ -1,5 +1,5 @@
 require 'test/unit'
-require './src/configLoader.rb'
+require './src/config_loader.rb'
 
 class ConfigLoaderTest < Test::Unit::TestCase
   def setup

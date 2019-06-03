@@ -48,4 +48,6 @@ class ProgramExecutor
     end
     return true,nil?
   end
+
+  private :is_file_compilable, :create_file
 end
