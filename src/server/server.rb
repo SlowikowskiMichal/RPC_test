@@ -1,9 +1,16 @@
 #!/usr/bin/env ruby
 require 'bunny'
 require './src/server/programExecutor.rb'
+require './src/server/serverConfig.rb'
+
 
 class RPCServer
+  @configuration
   def initialize
+    load_configuration
+    if @configuration.json_content.empty?
+      exit(1)
+    end
     @connection = Bunny.new
     @connection.start
     @channel = @connection.create_channel
@@ -32,7 +39,7 @@ class RPCServer
     queue.subscribe do |_delivery_info, properties, payload|
 
       executor = ProgramExecutor.new
-      stdout_str, error_str, status = executor.execute(payload)
+      stdout_str, error_str, status = executor.execute(payload,@configuration.ruby_path,@configuration.result_folder_path)
       result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}\n\n"
       exchange.publish(
           result,
@@ -40,6 +47,11 @@ class RPCServer
           correlation_id: properties.correlation_id
       )
     end
+  end
+
+  def load_configuration
+    @configuration = ServerConfigurationLoader.new
+    @configuration.load_configuration("./src/server/serverConfig.json")
   end
 end
 

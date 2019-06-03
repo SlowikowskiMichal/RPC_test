@@ -6,9 +6,8 @@ include Open3
 
 class ProgramExecutor
 
-  def create_file(file_content)
+  def create_file(file_content,result_path)
     program_id = SecureRandom.uuid
-    result_path = "result"
     unless File.directory? result_path
       FileUtils.mkdir_p result_path
     end
@@ -20,10 +19,10 @@ class ProgramExecutor
     return "#{result_path}/#{program_id}.rb"
   end
 
-  def execute(file_content)
+  def execute(file_content,ruby_path,result_path)
 
     begin
-      path = create_file(file_content)
+      path = create_file(file_content,result_path)
     rescue Exception => e
         return "File Creation Error\nContact Server Administrator","#{e.message}",nil?
     end
@@ -31,7 +30,7 @@ class ProgramExecutor
     flag, err = is_file_compilable(file_content)
 
     if flag
-      @stdout_str, @error_str, @status = Open3.capture3('C:\\Ruby25-x64\\bin\\ruby.exe', path)
+      @stdout_str, @error_str, @status = Open3.capture3(ruby_path, path)
       puts "STDOUT : #{@stdout_str}"
       puts "ERR : #{@error_str}"
       puts "STATUS : #{@status}"
