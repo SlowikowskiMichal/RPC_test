@@ -1,9 +1,9 @@
 require 'test/unit'
-require '../src/config_loader.rb'
+require './src/config_loader.rb'
 
 class ConfigLoaderTest < Test::Unit::TestCase
   def setup
-    @path_to_json = "../resources/exampleConfig.json"
+    @path_to_json = "./resources/exampleConfig.json"
   end
 
   def teardown

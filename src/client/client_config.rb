@@ -1,4 +1,4 @@
-require '../config_loader.rb'
+require './src/config_loader.rb'
 
 
 class ClientConfigurationLoader < ConfigurationLoader

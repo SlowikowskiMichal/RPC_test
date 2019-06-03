@@ -1,6 +1,3 @@
-
-#Opens file from path with validation
-
 class FileManager
   attr_accessor :file_path
 

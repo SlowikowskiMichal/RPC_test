@@ -1,5 +1,5 @@
 require 'test/unit'
-require '../../src/client/file_manager.rb'
+require './src/client/file_manager.rb'
 class FileManagerTest < Test::Unit::TestCase
   def setup
     # Do nothing
