@@ -25,5 +25,3 @@ class ClientConfigurationLoader < ConfigurationLoader
     end
   end
 end
-
-c = ClientConfigurationLoader.new

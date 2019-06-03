@@ -1,0 +1,9 @@
+{
+  "server"	:	{
+    "addr"	:	"192.168.8.111",
+    "port"	:	"5555",
+    "queue_name" : "rpc-queue"
+  },
+  "result_folder_path" : "new_result",
+  "ruby_path" : "C:\\example\\ruby_folder"
+}
