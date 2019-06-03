@@ -23,12 +23,12 @@ class MyTest < Test::Unit::TestCase
   test "should_return_port_as_default_rqbbitmq_port_by_default" do
     configuration_loader = ServerConfigurationLoader.new
     actual = configuration_loader.server_port
-    assert_equal("5762",actual,"Incorrect default server port")
+    assert_equal("5672",actual,"Incorrect default server port")
   end
 
   test "should_return_queue_name_as_rpc-queue_by_default" do
     configuration_loader = ServerConfigurationLoader.new
-    actual = configuration_loader.queue_name
+    actual = configuration_loader.server_queue_name
     assert_equal("rpc-queue",actual,"Incorrect default queue name")
   end
 
@@ -50,7 +50,7 @@ class MyTest < Test::Unit::TestCase
 
     actual_server = configuration_loader.server_addr
     actual_port = configuration_loader.server_port
-    actual_queue = configuration_loader.queue_name
+    actual_queue = configuration_loader.server_queue_name
     actual_result_folder_path = configuration_loader.result_folder_path
     actual_ruby_path = configuration_loader.ruby_path
 

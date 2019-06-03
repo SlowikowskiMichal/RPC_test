@@ -7,8 +7,8 @@ class RPCClient
   attr_accessor :call_id, :response, :lock, :condition, :connection,
                 :channel, :server_queue_name, :reply_queue, :exchange
 
-  def initialize(server_queue_name)
-    @connection = Bunny.new(automatically_recover: false)# :host => "192.168.43.56", :user => "test", :pass => "test") server adress!
+  def initialize(server_queue_name, server_addr, server_port)
+    @connection = Bunny.new(automatically_recover: false, :host => server_addr, :port => server_port)# :host => "192.168.43.56", :user => "test", :pass => "test") server adress!
     @connection.start
 
     @channel = connection.create_channel

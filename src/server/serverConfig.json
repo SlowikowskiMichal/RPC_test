@@ -1,0 +1,9 @@
+{
+  "server"	:	{
+    "addr"	:	"127.0.0.1",
+    "port"	:	"5672",
+    "queue_name" : "rpc-queue"
+  },
+  "result_folder_path" : "result",
+  "ruby_path" : "C:\\Ruby25-x64\\bin\\ruby.exe"
+}

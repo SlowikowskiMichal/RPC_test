@@ -4,18 +4,23 @@ if RUBY_VERSION.to_f < 2.0
 end
 require './src/client/rpcClient.rb'
 require './src/client/filemanager.rb'
+require './src/client/clientConfig.rb'
 
 class ClientApp
   @result
   @file_name
+  @configuration
 
   def initialize(argv = "")
-    @result = []
-    if argv.empty?
-      puts 'Give me a path to a file/files.'
-      @file_name = gets.chomp
-    else
-      @file_name = argv
+    load_configuration
+    unless @configuration.json_content.empty?
+      @result = []
+      if argv.empty?
+        puts 'Give me a path to a file/files.'
+        @file_name = gets.chomp
+      else
+        @file_name = argv
+      end
     end
   end
 
@@ -38,7 +43,7 @@ class ClientApp
 
   def send_file_to_server(file)
     opener = FileOpener.new(file)
-    flag, content = opener.openFile
+    flag, content = opener.open_file
     if flag
       answer = execute_rpc_call(content)
       return parse_answer(answer, file)
@@ -48,7 +53,7 @@ class ClientApp
   end
 
   def execute_rpc_call(content)
-    connection = RPCClient.new('rpc_queue')
+    connection = RPCClient.new(@configuration.server_queue_name,@configuration.server_addr,@configuration.server_port)
     answer = connection.call(content)
     connection.stop
     return answer
@@ -60,6 +65,11 @@ class ClientApp
 
   def print_result
       puts @result
+  end
+
+  def load_configuration
+    @configuration = ClientConfigurationLoader.new
+    @configuration.load_configuration("./src/client/clientConfig.json")
   end
 
 
