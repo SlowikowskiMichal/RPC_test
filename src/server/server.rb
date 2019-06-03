@@ -5,7 +5,7 @@ require './src/server/server_config.rb'
 
 
 class RPCServer
-  @configuration
+  attr_accessor :configuration
   def initialize
     load_configuration
     if @configuration.json_content.empty?
@@ -57,9 +57,8 @@ end
 
 begin
   server = RPCServer.new
-
   puts ' [x] Awaiting RPC requests'
-  server.start('rpc_queue')
+  server.start(server.queue)
   server.loop_forever
 rescue Interrupt => _
   server.stop
