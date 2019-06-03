@@ -1,5 +1,5 @@
 require 'test/unit'
-require './src/server/program_executor.rb'
+require '../../src/server/program_executor.rb'
 require 'mocha/test_unit'
 
 class ProgramExecutorTest < Test::Unit::TestCase

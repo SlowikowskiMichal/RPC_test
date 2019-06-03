@@ -1,8 +1,8 @@
 require 'test/unit'
-require './src/client/client_config.rb'
+require '../../src/client/client_config.rb'
 class ClientConfigTest < Test::Unit::TestCase
   def setup
-    @path_to_json = "./resources/serverConfig.json"
+    @path_to_json = "../../resources/serverConfig.json"
     @addr	= "192.168.8.111"
     @port =	"5555"
     @queue_name = "rpc-queue"
