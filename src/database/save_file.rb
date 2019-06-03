@@ -5,7 +5,7 @@ begin
 	if ARGV.empty?
 		puts "No file path given"
 	else
-		db = SQLite3::Database.open "test.db"
+		db = SQLite3::Database.open "./resources/database_folder/test.db"
 	
 		db.execute "CREATE TABLE IF NOT EXISTS File(Id INTEGER PRIMARY KEY, 
 		Name TEXT, Path TEXT)"
