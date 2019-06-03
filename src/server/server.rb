@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'bunny'
-require './src/server/program_executor.rb'
-require './src/server/server_config.rb'
+require './program_executor.rb'
+require './server_config.rb'
 
 
 class RPCServer
@@ -51,7 +51,7 @@ class RPCServer
 
   def load_configuration
     @configuration = ServerConfigurationLoader.new
-    @configuration.load_configuration("./src/server/serverConfig.json")
+    @configuration.load_configuration("./serverConfig.json")
   end
 end
 

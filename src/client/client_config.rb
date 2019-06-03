@@ -3,7 +3,7 @@
 # config from json
 # only connection config (host, port) [user, pasword optional]
 
-require './src/config_loader.rb'
+require '../config_loader.rb'
 
 
 class ClientConfigurationLoader < ConfigurationLoader

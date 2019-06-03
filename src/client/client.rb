@@ -2,9 +2,9 @@ if RUBY_VERSION.to_f < 2.0
   $stderr.puts "Ruby version 2.0 or higher required!"
   exit 1
 end
-require './src/client/rpc_client.rb'
-require './src/client/file_manager.rb'
-require './src/client/client_config.rb'
+require './rpc_client.rb'
+require './file_manager.rb'
+require './client_config.rb'
 
 class ClientApp
   @result
@@ -69,7 +69,7 @@ class ClientApp
 
   def load_configuration
     @configuration = ClientConfigurationLoader.new
-    @configuration.load_configuration("./src/client/clientConfig.json")
+    @configuration.load_configuration("./clientConfig.json")
   end
 
 

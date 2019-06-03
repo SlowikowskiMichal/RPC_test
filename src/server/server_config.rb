@@ -4,7 +4,7 @@
 # path to ruby.exe
 # connection variables
 
-require './src/config_loader.rb'
+require '../config_loader.rb'
 
 class ServerConfigurationLoader < ConfigurationLoader
   attr_accessor :json_content, :server_addr, :server_port, :server_queue_name, :result_folder_path, :ruby_path
