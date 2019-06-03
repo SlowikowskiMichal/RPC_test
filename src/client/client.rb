@@ -42,7 +42,7 @@ class ClientApp
   end
 
   def send_file_to_server(file)
-    opener = FileOpener.new(file)
+    opener = FileManager.new(file)
     flag, content = opener.open_file
     if flag
       answer = execute_rpc_call(content)
