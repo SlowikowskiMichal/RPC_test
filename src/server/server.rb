@@ -6,7 +6,9 @@ require './src/server/server_config.rb'
 
 class RPCServer
   attr_accessor :configuration
+
   def initialize
+    @configuration_path = "./src/server/serverConfig.json"
     load_configuration
     if @configuration.json_content.empty?
       exit(1)
@@ -51,7 +53,7 @@ class RPCServer
 
   def load_configuration
     @configuration = ServerConfigurationLoader.new
-    @configuration.load_configuration("./serverConfig.json")
+    @configuration.load_configuration(@configuration_path)
   end
 end
 

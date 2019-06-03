@@ -12,8 +12,8 @@ class ClientApp
   @configuration
 
   def initialize(argv = "")
+    @client_path = ".src/client/clientConfig.json"
     load_configuration
-
     @result = []
     if argv.empty?
       puts 'Give me a path to a file/files.'
@@ -69,7 +69,7 @@ class ClientApp
 
   def load_configuration
     @configuration = ClientConfigurationLoader.new
-    @configuration.load_configuration("./clientConfig.json")
+    @configuration.load_configuration(@client_path)
   end
 
 
