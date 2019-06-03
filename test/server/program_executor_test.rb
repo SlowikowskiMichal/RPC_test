@@ -2,7 +2,7 @@ require 'test/unit'
 require './src/server/program_executor.rb'
 require 'mocha/test_unit'
 
-class MyTest < Test::Unit::TestCase
+class ProgramExecutorTest < Test::Unit::TestCase
   def setup
     @program = "1 + 1"
     @result_folder_path = "result"

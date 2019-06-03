@@ -1,6 +1,6 @@
 require 'test/unit'
 require './src/client/client_config.rb'
-class MyTest < Test::Unit::TestCase
+class ClientConfigTest < Test::Unit::TestCase
   def setup
     @path_to_json = "./resources/serverConfig.json"
     @addr	= "192.168.8.111"
