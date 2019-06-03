@@ -8,7 +8,7 @@ class ClientConfigurationLoader < ConfigurationLoader
     super()
     @server_addr = "127.0.0.1"
     @server_port = "5672"
-    @server_queue_name = "rpc-queue"
+    @server_queue_name = "rpc_queue"
   end
 
   def load_configuration(pathFile)

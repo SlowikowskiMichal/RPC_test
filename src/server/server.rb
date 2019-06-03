@@ -39,7 +39,7 @@ class RPCServer
 
   def subscribe_to_queue
     queue.subscribe do |_delivery_info, properties, payload|
-
+      puts "GOT FILE!"
       executor = ProgramExecutor.new
       stdout_str, error_str, status, file_path = executor.execute(payload,@configuration.ruby_path,@configuration.result_folder_path)
       result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}\n\n"
@@ -48,6 +48,7 @@ class RPCServer
           routing_key: properties.reply_to,
           correlation_id: properties.correlation_id
       )
+      puts "RESPONSE RETURNED!"
     end
   end
 

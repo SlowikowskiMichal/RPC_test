@@ -12,7 +12,7 @@ class ClientApp
   @configuration
 
   def initialize(argv = "")
-    @client_path = ".src/client/clientConfig.json"
+    @client_path = "./src/client/clientConfig.json"
     load_configuration
     @result = []
     if argv.empty?
