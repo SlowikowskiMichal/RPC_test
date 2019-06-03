@@ -3,27 +3,27 @@ if RUBY_VERSION.to_f < 2.0
   exit 1
 end
 require './src/client/rpcClient.rb'
-require './src/client/fileOpener.rb'
+require './src/client/filemanager.rb'
 
 class ClientApp
   @result
-  @fileName
+  @file_name
 
   def initialize(argv = "")
     @result = []
     if argv.empty?
       puts 'Give me a path to a file/files.'
-      @fileName = gets.chomp
+      @file_name = gets.chomp
     else
-      @fileName = argv
+      @file_name = argv
     end
   end
 
   def run
-    if @fileName.respond_to?('each')
+    if @file_name.respond_to?('each')
       threads = []
       mutex = Mutex.new
-      @fileName.each do |file|
+      @file_name.each do |file|
         threads << Thread.new{
           temp = send_file_to_server(file)
           mutex.synchronize {@result.append temp}
@@ -31,8 +31,8 @@ class ClientApp
       end
       threads.each{|t| t.join}
     else
-      answer = send_file_to_server(@fileName)
-      @result = parse_answer(answer, @fileName)
+      answer = send_file_to_server(@file_name)
+      @result = parse_answer(answer, @file_name)
     end
   end
 
