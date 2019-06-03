@@ -7,7 +7,7 @@ begin
 	elsif ARGV[0] == ARGV[1]
 		puts "There is nothing to compare. The files are identical"
 	else
-		db = SQLite3::Database.open "test.db"
+		db = SQLite3::Database.open "./resources/database_folder/test.db"
 		db.execute("PRAGMA Foreign_keys = ON")
 		db.execute "CREATE TABLE IF NOT EXISTS File_Difference
 		(	Id INTEGER PRIMARY KEY,
