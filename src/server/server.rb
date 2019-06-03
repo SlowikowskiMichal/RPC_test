@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'bunny'
-require './execfunction.rb'
+require './src/server/programExecutor.rb'
 
 class RPCServer
   def initialize
@@ -30,7 +30,9 @@ class RPCServer
 
   def subscribe_to_queue
     queue.subscribe do |_delivery_info, properties, payload|
-      stdout_str, error_str, status = ccrf(payload)
+
+      executor = ProgramExecutor.new
+      stdout_str, error_str, status = executor.execute(payload)
       result = "Output:\n#{stdout_str}\nErrors:\n#{error_str}\n\n"
       exchange.publish(
           result,

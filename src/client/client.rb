@@ -25,45 +25,45 @@ class ClientApp
       mutex = Mutex.new
       @fileName.each do |file|
         threads << Thread.new{
-          temp = sendFileToServer(file)
+          temp = send_file_to_server(file)
           mutex.synchronize {@result.append temp}
         }
       end
       threads.each{|t| t.join}
     else
-      answer = sendFileToServer(@fileName)
-      @result = parseAnswer(answer,@fileName)
+      answer = send_file_to_server(@fileName)
+      @result = parse_answer(answer, @fileName)
     end
   end
 
-  def sendFileToServer(file)
+  def send_file_to_server(file)
     opener = FileOpener.new(file)
     flag, content = opener.openFile
     if flag
-      answer = executeRPCCall(content)
-      return parseAnswer(answer,file)
+      answer = execute_rpc_call(content)
+      return parse_answer(answer, file)
     else
       return "Can't open file #{file}"
     end
   end
 
-  def executeRPCCall(content)
+  def execute_rpc_call(content)
     connection = RPCClient.new('rpc_queue')
     answer = connection.call(content)
     connection.stop
     return answer
   end
 
-  def parseAnswer(answer,file)
+  def parse_answer(answer, file)
     return "Result #{file}:\n#{answer}"
   end
 
-  def printResult
+  def print_result
       puts @result
   end
 
 
-  private :sendFileToServer, :executeRPCCall, :parseAnswer
+  private :send_file_to_server, :execute_rpc_call, :parse_answer
 end
 
 
@@ -71,5 +71,5 @@ if __FILE__ == $0
 
   client = ClientApp.new(ARGV)
   client.run
-  client.printResult
+  client.print_result
 end
