@@ -16,8 +16,8 @@ class RPCServer
     @channel = @connection.create_channel
   end
 
-  def start(queue_name)
-    @queue = channel.queue(queue_name)
+  def start
+    @queue = channel.queue(@configuration.server_queue_name)
     @exchange = channel.default_exchange
     subscribe_to_queue
   end
@@ -58,7 +58,7 @@ end
 begin
   server = RPCServer.new
   puts ' [x] Awaiting RPC requests'
-  server.start(server.queue)
+  server.start()
   server.loop_forever
 rescue Interrupt => _
   server.stop
