@@ -14,7 +14,7 @@ class MyTest < Test::Unit::TestCase
     # Do nothing
   end
 
-  test "should_return_server_address_as_local_host_by_default" do
+  test "should_return_address_as_local_host_by_default" do
     configuration_loader = ServerConfigurationLoader.new
     actual = configuration_loader.server_addr
     assert_equal("127.0.0.1",actual,"Incorrect default server address")
@@ -44,7 +44,7 @@ class MyTest < Test::Unit::TestCase
     assert_equal('C:\Ruby25-x64\bin\ruby.exe',actual,"Incorrect default ruby location")
   end
 
-  test "should_parse_json_files_to_attributes" do
+  test "should_parse_json_files_to_server_attributes" do
     configuration_loader = ServerConfigurationLoader.new
     configuration_loader.load_configuration(@path_to_json)
 
