@@ -5,11 +5,11 @@ require 'mocha/test_unit'
 class ProgramExecutorTest < Test::Unit::TestCase
   def setup
     @program = "1 + 1"
-    @result_folder_path = "result"
+    @result_folder_path = "./result"
     @ruby_path = 'C:\example\ruby_folder'
     @programID = "randomID"
     @iprogram = "1 + "
-    @incorrect_result_folder = "results"
+    @incorrect_result_folder = "./results"
   end
 
   def teardown
@@ -35,6 +35,7 @@ class ProgramExecutorTest < Test::Unit::TestCase
     actual = pe.create_file(@program,@result_folder_path,@programID)
     assert_equal(@result_folder_path+"/"+@programID+".rb",actual,"Incorrect path to file")
     File.delete(actual) if File.exist?(actual)
+    FileUtils.remove_dir(@result_folder_path) if File.directory?(@result_folder_path)
   end
 
   test "should_return_path_to_file_if_result_folder_doesn't_exists" do
@@ -47,22 +48,23 @@ class ProgramExecutorTest < Test::Unit::TestCase
 
   test "should_return_error_if_program_can't_be_compiled" do
     pe = ProgramExecutor.new
-    stdout,error,status = pe.execute(@iprogram,@result_folder_path,@programID)
+    stdout,error,status = pe.execute(@iprogram,@ruby_path,@result_folder_path,@programID)
     assert_equal("Can't compile file",stdout,"Incorrect program output")
     assert(!error.empty?,"Incorrect error message")
-    file = @incorrect_result_folder+"/"+@programID+".rb"
+    file = @result_folder_path+"/"+@programID+".rb"
     File.delete(file) if File.exist?(file)
-    FileUtils.remove_dir(@result_folder_path) if File.directory?(@incorrect_result_folder)
+    FileUtils.remove_dir(@result_folder_path) if File.directory?(@result_folder_path)
   end
 
   test "should_return_result_if_program_can_be_compiled" do
     pe = ProgramExecutor.new
     pe.expects(:run_software).returns(2,"","")
-    stdout,error,status = pe.execute(@program,@result_folder_path,@programID)
+    stdout,error,status = pe.execute(@program,@ruby_path,@result_folder_path,@programID)
     assert_equal(2,stdout,"Incorrect program output")
     assert(error.nil?,"Incorrect error message")
-    file = @incorrect_result_folder+"/"+@programID+".rb"
+    file = @result_folder_path+"/"+@programID+".rb"
     File.delete(file) if File.exist?(file)
-    FileUtils.remove_dir(@result_folder_path) if File.directory?(@incorrect_result_folder)
+    FileUtils.remove_dir(@result_folder_path) if File.directory?(@result_folder_path)
   end
+
 end

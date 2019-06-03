@@ -1,6 +1,3 @@
-#TODO
-# config loader interface
-
 require 'json'
 
 class ConfigurationLoader
