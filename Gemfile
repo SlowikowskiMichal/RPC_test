@@ -8,3 +8,4 @@ gem 'json'
 gem 'test-unit'
 gem 'simplecov', require: false, group: :test
 gem 'sqlite3'
+gem 'mocha'

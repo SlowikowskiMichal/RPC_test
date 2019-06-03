@@ -6,8 +6,7 @@ include Open3
 
 class ProgramExecutor
 
-  def create_file(file_content,result_path)
-    program_id = SecureRandom.uuid
+  def create_file(file_content,result_path,program_id=SecureRandom.uuid)
     unless File.directory? result_path
       FileUtils.mkdir_p result_path
     end
@@ -19,25 +18,18 @@ class ProgramExecutor
     return "#{result_path}/#{program_id}.rb"
   end
 
-  def execute(file_content,ruby_path,result_path)
+  def execute(file_content,ruby_path,result_path,program_id=SecureRandom.uuid)
 
-    begin
-      path = create_file(file_content,result_path)
-    rescue Exception => e
-        return "File Creation Error\nContact Server Administrator","#{e.message}",nil?
-    end
+    path = create_file(file_content,result_path,program_id)
 
     flag, err = is_file_compilable(file_content)
 
     if flag
-      @stdout_str, @error_str, @status = Open3.capture3(ruby_path, path)
-      puts "STDOUT : #{@stdout_str}"
-      puts "ERR : #{@error_str}"
-      puts "STATUS : #{@status}"
+      @stdout_str, @error_str, @status = run_software(ruby_path,path)
       return @stdout_str, @error_str, @status
     end
 
-    return "Can't compile file", err, nil?
+    return "Can't compile file", err, ""
   end
 
   def is_file_compilable(file_content)
@@ -46,8 +38,13 @@ class ProgramExecutor
     rescue Exception => e
       return false,e.message
     end
-    return true,nil?
+    return true,""
   end
 
-  private :is_file_compilable, :create_file
+  def run_software(ruby_path,path)
+    @stdout_str, @error_str, @status = Open3.capture3(ruby_path, path)
+    return @stdout_str, @error_str, @status
+  end
+
+  private :run_software
 end
