@@ -13,15 +13,15 @@ class ClientApp
 
   def initialize(argv = "")
     load_configuration
-    unless @configuration.json_content.empty?
-      @result = []
-      if argv.empty?
-        puts 'Give me a path to a file/files.'
-        @file_name = gets.chomp
-      else
-        @file_name = argv
-      end
+
+    @result = []
+    if argv.empty?
+      puts 'Give me a path to a file/files.'
+      @file_name = gets.chomp
+    else
+      @file_name = argv
     end
+
   end
 
   def run
