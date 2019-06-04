@@ -24,7 +24,7 @@ class ServerConfigurationLoader < ConfigurationLoader
       @server_addr = @json_content["server"]["addr"] unless @json_content["server"]["addr"].nil?
       @server_port = @json_content["server"]["port"] unless @json_content["server"]["port"].nil?
       @server_queue_name = @json_content["server"]["queue_name"] unless @json_content["server"]["port"].nil?
-      @result_folder_path = @json_content["result_folder_path"] unless @json_content["result_folder_path"].nil?
+      @result_folder_path = @json_content["result_folder_path"] unless @json_content["result_folder_path"].nil?     
       @ruby_path = @json_content["ruby_path"] unless @json_content["result_folder_path"].nil?
     end
   end
