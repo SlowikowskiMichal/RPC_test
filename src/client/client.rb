@@ -59,12 +59,7 @@ class ClientApp
   # Executes rpc call to server
   # @param [Stirng] content - Content of opened file.
   # @return [String] answer - Returns answer from server. Answer contains program output and errors.
-  def execute_rpc_call(content)
-    connection = RPCClient.new(@configuration.server_queue_name,@configuration.server_addr,@configuration.server_port)
-    answer = connection.call(content)
-    connection.stop
-    return answer
-  end
+
 
   # Parse answer to readable format
   # @param [String] answer - Answer from server.
