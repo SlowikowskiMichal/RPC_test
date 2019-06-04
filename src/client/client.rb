@@ -11,6 +11,8 @@ class ClientApp
   @file_name
   @configuration
 
+  # Initialization
+  # @param [string] argv - list script of arguments, could be empty
   def initialize(argv = "")
     @client_path = "./src/client/clientConfig.json"
     load_configuration
@@ -23,7 +25,7 @@ class ClientApp
     end
 
   end
-
+  # Running clientApp 
   def run
     if @file_name.respond_to?('each')
       threads = []
@@ -40,7 +42,9 @@ class ClientApp
       @result = parse_answer(answer, @file_name)
     end
   end
-
+  # Sends file to server using rpc communication
+  # @param [String] file - Path to the file to send
+  # @return [String] answer - Returned message. Could return "Can't open file" message if path to file is invalid
   def send_file_to_server(file)
     opener = FileManager.new(file)
     flag, content = opener.open_file
@@ -52,13 +56,21 @@ class ClientApp
     end
   end
 
-  def execute_rpc_call(content)
+  # Executes rpc call to server
+  # @param [Stirng] content - Content of opened file.
+  # @return [String] answer - Returns answer from server. Answer contains program output and errors.
+ def execute_rpc_call(content)
     connection = RPCClient.new(@configuration.server_queue_name,@configuration.server_addr,@configuration.server_port)
     answer = connection.call(content)
     connection.stop
     return answer
   end
 
+
+  # Parse answer to readable format
+  # @param [String] answer - Answer from server.
+  # # @param [String] file - File name
+  # @return [String] Formated answer
   def parse_answer(answer, file)
     return "Result #{file}:\n#{answer}"
   end
