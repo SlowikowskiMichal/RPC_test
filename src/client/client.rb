@@ -11,6 +11,7 @@ class ClientApp
   @file_name
   @configuration
 
+  # Initialization
   def initialize(argv = "")
     @client_path = "./src/client/clientConfig.json"
     load_configuration
@@ -23,7 +24,7 @@ class ClientApp
     end
 
   end
-
+  # Running clientApp 
   def run
     if @file_name.respond_to?('each')
       threads = []
