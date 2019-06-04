@@ -27,7 +27,7 @@ class ClientConfigTest < Test::Unit::TestCase
   test "should_return_server_queue_name_as_rpc-queue_by_default" do
     configuration_loader = ClientConfigurationLoader.new
     actual = configuration_loader.server_queue_name
-    assert_equal("rpc-queue",actual,"Incorrect default queue name")
+    assert_equal("rpc_queue",actual,"Incorrect default queue name")
   end
   #@queue_name["server"]["queue_name"]
   test "should_parse_json_files_to_client_attributes" do
